@@ -32,6 +32,7 @@ RETURN_TYPE_REXP = re.compile(r'^:rtype:\s?(.*)')
 
 logger = get_modernrpc_logger(__name__)
 
+JSONRPC_INTERCEPTOR = settings.JSONRPC_INTERCEPTOR
 
 class RPCMethod(object):
 
@@ -49,6 +50,8 @@ class RPCMethod(object):
         # Authentication related attributes
         self.predicates = getattr(func, 'modernrpc_auth_predicates', None)
         self.predicates_params = getattr(func, 'modernrpc_auth_predicates_params', ())
+
+        self.interceptor = JSONRPC_INTERCEPTOR
 
         # List method's positional arguments
         # We can't use django.utils.inspect.get_func_args() with Python 2, because this function remove the first

@@ -102,7 +102,16 @@ class RPCHandler(object):
 
         try:
             # Call the rpc method, as standard python function
-            return _method.function(*args, **kwargs)
+            if not _method.interceptor:
+                res = _method.function(*args, **kwargs)
+            else:
+                headers = {'uber-trace-id': self.request.META.get('HTTP_UBER_TRACE_ID')}
+                span = _method.interceptor.trace_before_call(_method.function.__name__, args, kwargs,
+                                                              headers=headers)
+                res = _method.function(*args, **kwargs)
+                _method.interceptor.trace_after_call(res, span)
+
+            return res
 
         except TypeError as e:
             # If given arguments cannot be transmitted properly to python function,
