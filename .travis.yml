@@ -41,13 +41,13 @@ matrix:
     - python: 2.7
       env: DJANGO_VERSION=2.1.*
   allow_failures:
-    - python: 3.7
+    - python: 3.3
 
 # command to install Django (not in requirements.txt to control version to install)
 install:
   - pip install -U Django==$DJANGO_VERSION
   - pip install -r requirements.txt
-  - pip install -U coveralls
+  - pip install -U coveralls==1.3.*
 
 # command to run tests
 script:
